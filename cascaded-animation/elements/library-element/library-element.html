@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="library-grid.html">
+<link rel="import" href="library-card.html">
+
+<dom-module id="library-element">
+	<template>
+		<style>
+			:host {
+				display: block;
+				visibility: hidden;
+			}
+		</style>
+		
+		<neon-animated-pages selected="{{selected}}">
+		    <library-grid id="grid" on-grid-click="_onGridClick"></library-grid>
+		    <library-card id="card" on-click="_onCardClick"></library-card>
+		</neon-animated-pages>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'library-element',
+
+			behaviors: [
+				Polymer.NeonAnimatableBehavior,
+				Polymer.NeonAnimationRunnerBehavior
+			],
+
+			properties: {
+			    selected: {
+			    	type: Boolean,
+			    	value: 0
+			    },
+
+			    animationConfig: {
+			    	type: Object,
+			    	value: function () {
+			    	    return {
+			    	    	'entry': [{
+			    	    		animatable: this.$['grid'],
+			    	    		type: 'entry'
+			    	    	}]
+			    	    }
+			    	}
+			    }
+			},
+
+			_onGridClick: function (event, data) {
+			    this.selected = 1;
+			    // console.log(event.detail.data);
+			    // console.log(data);
+			},
+
+			_onCardClick: function () {
+			    this.selected = 0;
+			},
+
+			show: function () {
+				this.async(function () {
+				    this.style.visibility = 'visible';
+				    this.playAnimation('entry');
+				});
+			}
+		});
+	</script>
+</dom-module>
