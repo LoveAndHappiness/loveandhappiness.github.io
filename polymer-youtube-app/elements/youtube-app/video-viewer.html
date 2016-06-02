@@ -1,0 +1,56 @@
+<dom-module id="video-viewer">
+	<template>
+		<style>
+			:host {
+				display: block;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.Video {
+				margin-top: 50px;
+			}
+
+			google-youtube {
+				padding: 50px;
+			}
+		</style>
+
+		<app-route route="{{route}}" pattern="/:vid" data="{{data}}" query-params="{{queryParams}}"></app-route>
+		
+		<paper-material class="Video" elevation="3">
+			<google-youtube
+				video-id="{{data.vid}}"
+				height="270px"
+				width="480px"
+				rel="0"
+				start="5"
+				autoplay="0">
+			</google-youtube>
+		</paper-material>
+
+		<br>
+
+		<a href="/#/search">Go to Search</a>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'video-viewer',
+
+			properties: {
+				route: {
+					type: Object,
+					notify: true
+				},
+
+				data: {
+					type: Object
+				}
+			}
+
+		});
+	</script>
+</dom-module>

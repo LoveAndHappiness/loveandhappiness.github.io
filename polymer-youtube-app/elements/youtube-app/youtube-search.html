@@ -1,0 +1,78 @@
+<dom-module id="youtube-search">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+
+		<app-route route="{{route}}" pattern="/:searchQuery" data="{{data}}"></app-route>
+		
+		<paper-input label="Search..." value="{{data.searchQuery}}"></paper-input>
+
+		<iron-ajax
+		 	auto
+		 	url="https://www.googleapis.com/youtube/v3/search"
+		 	params="{{params}}"
+		 	handle-as="json"
+		 	last-response="{{videoData}}"></iron-ajax>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'youtube-search',
+
+			properties: {
+			    route: {
+			    	type: Object,
+			    	notify: true
+			    },
+
+			    data: {
+			    	type: Object
+			    },
+
+			    category: {
+			    	type: String,
+			    	notify: true,
+			    	observer: '_categoryChanged'
+			    },
+
+			    params: {
+			    	type: String,
+			    	computed: '_setParams(data.searchQuery)'
+			    },
+
+			    videoData: {
+			    	type: Object,
+			    	notify: true
+			    },
+			},
+
+			observers: [
+				'_pathChanged(route.path)'
+			],
+
+			_pathChanged: function (data) {
+			    this.async(function () {
+			        if (!this.route.path) {
+			        	this.set('route.path', '/');
+			        }
+			    }, 1);
+			},
+
+			_categoryChanged: function () {
+			    console.log('category changed');
+			},
+
+			_setParams: function () {
+			    return {
+			    	part: 'snippet',
+			    	q: this.data.searchQuery,
+			    	key: 'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+			    	type: 'video'
+			    }
+			}
+		});
+	</script>
+</dom-module>

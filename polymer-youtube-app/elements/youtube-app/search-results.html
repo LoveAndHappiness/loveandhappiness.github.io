@@ -1,0 +1,51 @@
+<dom-module id="search-results">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+
+			.Item {
+				background: #fff;
+				height: 180px;
+				margin: 40px;
+				display: flex;
+				flex-direction: row;
+			}
+
+			.Item__text {
+				padding: 0px 20px;
+			}
+		</style>
+
+		<template is="dom-repeat" items="{{items}}" as="video">
+			<paper-material class="Item">
+				<div class="Item__thumbnail">
+					<a href="/#/video/{{video.id}}">
+						<img src="{{video.thumbnail}}">
+					</a>
+				</div>
+
+				<div class="Item__text">
+					<h1><a href="/#/video/{{video.id}}">{{video.title}}</a></h1>
+					<p>{{video.description}}</p>
+				</div>
+			</paper-material>
+		</template>
+		
+		<a href="/#/video">Go to Video Viewer</a>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'search-results',
+
+			properties: {
+			    items: {
+			    	type: Object,
+			    	notify: true
+			    }
+			}
+		});
+	</script>
+</dom-module>

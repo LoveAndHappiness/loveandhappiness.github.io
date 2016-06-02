@@ -1,0 +1,103 @@
+<link rel="import" href="youtube-toolbar.html">
+<link rel="import" href="youtube-search.html">
+<link rel="import" href="search-results.html">
+<link rel="import" href="video-viewer.html">
+
+<dom-module id="youtube-app">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+
+		<app-location route="{{route}}" use-hash-as-path></app-location>
+
+		<app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
+		<app-route route="{{route}}" pattern="/search" tail="{{searchTail}}"></app-route>
+		<app-route route="{{route}}" pattern="/video" tail="{{videoTail}}" active="{{videoPageActive}}"></app-route>
+
+		<youtube-toolbar collapsed$="{{videoPageActive}}">
+			<youtube-search route="{{searchTail}}" video-data="{{videoData}}"></youtube-search>
+		</youtube-toolbar>
+
+		<iron-pages attr-for-selected="id" selected="{{data.page}}">
+			
+			<search-results id="search" items="{{videos}}"></search-results>
+
+			<video-viewer id="video" route="{{videoTail}}"></video-viewer>
+
+		</iron-pages>
+
+	</template>
+	<script>
+	window.addEventListener('WebComponentsReady', function () {
+		Polymer({
+			is: 'youtube-app',
+
+			properties: {
+			    route: {
+			    	type: Object
+			    },
+
+			    videoData: {
+			    	type: Object,
+			    	observer: '_videoDataChanged'
+			    },
+
+			    videoPageActive: {
+			    	type: Boolean
+			    },
+
+			    searchTail: {
+			    	type: Object,
+			    	notify: true
+			    },
+
+			    videoTail: {
+			    	type: Object,
+			    	notify: true
+			    },
+
+			    videos: {
+			    	type: Array,
+			    	value: []
+			    },
+
+			    data: {
+			    	type: Object,
+			    	value: {
+			    		page: '/search/'
+			    	}
+			    }
+
+			},
+
+			ready: function () {
+			    this.async(function () {
+			        if (!this.route.path) {
+			        	this.set('route.path', '/search')
+			        }
+			    }, 1);
+			},
+
+			_videoDataChanged: function (data) {
+			    var allVideos = [];
+
+			    data.items.forEach(function (videoItem) {
+			        var youtubeVideo = {
+			        	id: videoItem.id.videoId,
+			        	title: videoItem.snippet.title,
+			        	description: videoItem.snippet.description,
+			        	thumbnail: videoItem.snippet.thumbnails.medium.url
+			        };
+
+			        allVideos.push(youtubeVideo);
+			    });
+
+			    this.set('videos', allVideos);
+			}
+		});
+	});
+	</script>
+</dom-module>
